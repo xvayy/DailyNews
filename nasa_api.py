@@ -12,21 +12,28 @@ title = content["title"]
 # Get description of the image
 description = content["explanation"]
 
-# Get today's image url
-image_url = content["hdurl"]
 
-# Make request
-req = requests.get(image_url)
+if content["media_type"] == "video":
+    video_link = content["url"]
+else:
+    # Get today's image url
+    image_url = content["hdurl"]
 
-# Binary code
-image = req.content
+    # Make request
+    req = requests.get(image_url)
 
-# Create image with jpg extension in root directory
-with open("image.jpg", "wb") as file:
-    file.write(image)
+    # Binary code
+    image = req.content
+
+    # Create image with jpg extension in root directory
+    with open("image.jpg", "wb") as file:
+        file.write(image)
 
 # FRONTEND with streamlit
 st.title(title)
-st.image("image.jpg")
-st.write(description)
+if content["media_type"] == "video":
+    st.link_button("Wath video on youtube", video_link)
+else:
+    st.image("image.jpg")
+    st.write(description)
 
